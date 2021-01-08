@@ -18,21 +18,20 @@ public class CustomerController {
     ObjectMapper mapper;
     ArrayList<Customer> customerList;
     String customersJsonPath = "src/test/data/customers.json"; // 4 customers
-    String customerJsonPath = "src/test/data/existingCustomer.json";
 
-    @GetMapping("/customers")
-    public List<Customer> getCustomers() throws IOException {
+    private CustomerController() throws IOException {
         mapper = new ObjectMapper();
         File customersFile = new File(customersJsonPath);
         customerList = mapper.readValue(customersFile, new TypeReference<ArrayList<Customer>>() {});
+    }
+
+    @GetMapping("/customers")
+    public List<Customer> getCustomers() throws IOException {
         return customerList;
     }
 
     @GetMapping("/customer/{id}")
     public Customer getCustomerById(@PathVariable String id) throws IOException {
-        mapper = new ObjectMapper();
-        File customersFile = new File(customersJsonPath);
-        customerList = mapper.readValue(customersFile, new TypeReference<ArrayList<Customer>>() {});
         for (Customer customer : customerList ) {
             if(customer.getId().equals(id)){
                 return customer;
@@ -43,15 +42,6 @@ public class CustomerController {
 
     @PostMapping("/customers")
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) throws IOException {
-        mapper = new ObjectMapper();
-        File customersFile = new File(customersJsonPath);
-        customerList = mapper.readValue(customersFile, new TypeReference<ArrayList<Customer>>() {});
-       /* Customer customer1 = new Customer();
-        customer1.setFirstName(customer.getFirstName());
-        customer1.setLastName(customer.getLastName());
-        customer1.setAddress(customer.getAddress());
-        customer1.setPhoneNumber(customer.getPhoneNumber());*/
-        customerList.add(customer);
         return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
     }
 }
