@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,11 +59,11 @@ class CustomerServiceApplicationTests {
 		return mapper.writeValueAsString(customer);
 	}
 
-	private String createCustomerJsonString() throws IOException {
+	private Customer createCustomerJsonString() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		File customerFile = new File(newCustomerJsonPath);
 		Customer customer = mapper.readValue(customerFile, Customer.class);
-		return mapper.writeValueAsString(customer);
+		return customer;
 	}
 
 	@Test
@@ -80,6 +81,16 @@ class CustomerServiceApplicationTests {
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").exists());
+	}
+
+	@Test
+	void createCustomer() throws Exception {
+		mockMvc.perform(post("/customers")
+				.contentType(MediaType.APPLICATION_JSON)
+				.characterEncoding("utf-8")
+				.content(mapper.writeValueAsString(createCustomerJsonString())))
+				.andExpect(status().isCreated());
+
 	}
 
 }
