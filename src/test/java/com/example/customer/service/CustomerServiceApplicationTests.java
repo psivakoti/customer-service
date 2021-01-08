@@ -90,7 +90,6 @@ class CustomerServiceApplicationTests {
 				.characterEncoding("utf-8")
 				.content(mapper.writeValueAsString(createCustomerJsonString())))
 				.andExpect(status().isCreated());
-
 	}
 
 }

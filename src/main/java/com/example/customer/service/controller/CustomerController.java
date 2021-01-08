@@ -4,6 +4,7 @@ import com.example.customer.service.Customer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class CustomerController {
     }
 
     @PostMapping("/customers")
-    public HttpStatus createCustomer(@RequestBody Customer customer) throws IOException {
+    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) throws IOException {
         mapper = new ObjectMapper();
         File customersFile = new File(customersJsonPath);
         customerList = mapper.readValue(customersFile, new TypeReference<ArrayList<Customer>>() {});
@@ -51,6 +52,6 @@ public class CustomerController {
         customer1.setAddress(customer.getAddress());
         customer1.setPhoneNumber(customer.getPhoneNumber());*/
         customerList.add(customer);
-        return HttpStatus.CREATED;
+        return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
     }
 }
